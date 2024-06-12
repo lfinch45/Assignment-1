@@ -27,9 +27,7 @@ class BrowserHandling:
 
         return driver
 
-    def fillOutForm(df, driver):
-        ### Have to login first:
-
+    def logIn(df, driver):
         # Username
         driver.find_element(By.NAME, "username").send_keys("maria")
 
@@ -38,8 +36,9 @@ class BrowserHandling:
 
         # Click Log In
         driver.find_element(By.XPATH, "//button[contains(text(),'Log in')]").click()
+    
+    def fillOutForm(df, driver):
         
-
         ### Now we can fill out the form for each row in the Excel sheet
         for index, row in df.iterrows():
             # Creating variables for each entry in a row
@@ -68,7 +67,7 @@ class BrowserHandling:
         driver.find_element(By.XPATH, "//a[@href='#/robot-order']").click()
 
         # Need to accept terms and conditions
-        
+
 
         # Selecting a robot head
         select = Select(driver.find_element(By.NAME, "head"))
@@ -92,13 +91,11 @@ class BrowserHandling:
         driver.quit()
 
 
-        
-
-
 def main():
    df = ExcelHandling.getDF("SalesData.xlsx")
    driver = BrowserHandling.getDriver("https://robotsparebinindustries.com/")
 
+   BrowserHandling.logIn(df, driver)
    BrowserHandling.fillOutForm(df, driver)
    # BrowserHandling.orderRobot(df, driver) ### EXTRA
 

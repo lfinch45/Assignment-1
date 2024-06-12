@@ -1,3 +1,4 @@
 # python libraries: pandas and rpaframework (put them in a requirements.txt)
 pandas
 rpaframework
+selenium
