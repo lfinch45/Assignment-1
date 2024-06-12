@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import random
 
 class ExcelHandling:
     
@@ -19,7 +20,7 @@ class ExcelHandling:
     
 class BrowserHandling:
 
-    def driverSetUp(webLink):
+    def getDriver(webLink):
         # setting up WebDriver to interact with given website in Edge browser
         driver = webdriver.Edge(service=Service(r"C:\Users\LukeFinch\Downloads\edgedriver_win64\msedgedriver.exe"))
         driver.get(webLink)
@@ -61,14 +62,45 @@ class BrowserHandling:
             driver.find_element(By.XPATH, "//button[contains(text(),'Submit')]").click()
 
         driver.quit()
+
+    def orderRobot(df, driver):
+        # Switching over to the "Order your robot!" page
+        driver.find_element(By.XPATH, "//a[@href='#/robot-order']").click()
+
+        # Need to accept terms and conditions
+        
+
+        # Selecting a robot head
+        select = Select(driver.find_element(By.NAME, "head"))
+        select.select_by_value(str(random.randint(1, 6)))
+
+        # Clicking a robot body (multiple choice)
+        driver.find_element(By.ID, "id-body-" + str(random.randint(1, 6))).click() # Randomly choosing between 6 multiple choice options
+
+        # Inputting robot legs
+        driver.find_element(By.NAME, "legs").send_keys(str(random.randint(1, 4))) # Randomly picking the amount of legs through 1-4
+
+        # Inputting shipment address
+        driver.find_element(By.NAME, "address").send_keys("1324 Trapp Ln.")
+
+        # Previewing order
+        driver.find_element(By.XPATH, "//button[contains(text(),'Preview')]").click()
+
+        # Submitting order
+        driver.find_element(By.XPATH, "//button[contains(text(),'Order')]").click()
+
+        driver.quit()
+
+
         
 
 
 def main():
    df = ExcelHandling.getDF("SalesData.xlsx")
-   driver = BrowserHandling.driverSetUp("https://robotsparebinindustries.com/")
+   driver = BrowserHandling.getDriver("https://robotsparebinindustries.com/")
 
    BrowserHandling.fillOutForm(df, driver)
+   # BrowserHandling.orderRobot(df, driver) ### EXTRA
 
 
 
